@@ -119,4 +119,8 @@ public function update(Request $request, $id)
 
     return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
 }
+public function getPrice(Product $product)
+{
+    return response()->json(['price' => $product->harga]);
+}
 }
