@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -20,13 +21,23 @@ class UsersController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // Validate and update the user
+        // Validate user input
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|confirmed|min:8',
         ]);
 
-        $user->update($validatedData);
+        // Update user data
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+        
+        if (!empty($validatedData['password'])) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+
+        $user->save();
+
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 

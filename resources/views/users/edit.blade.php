@@ -24,6 +24,19 @@
             <p>{{ $message }}</p>
         @enderror
 
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        <small>Leave blank to keep current password</small>
+        @error('password')
+            <p>{{ $message }}</p>
+        @enderror
+
+        <label for="password_confirmation">Confirm Password:</label>
+        <input type="password" id="password_confirmation" name="password_confirmation">
+        @error('password_confirmation')
+            <p>{{ $message }}</p>
+        @enderror
+
         <button type="submit">Update User</button>
     </form>
 
