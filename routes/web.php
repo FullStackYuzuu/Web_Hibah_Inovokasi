@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,3 +23,10 @@ Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
 Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
 Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
+Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+Route::get('logout', function () {
+    Auth::logout();
+    return redirect('/products');
+})->name('logout');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

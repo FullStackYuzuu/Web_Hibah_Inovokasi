@@ -12,6 +12,14 @@
 
     <a href="{{ route('products.create') }}" class="btn btn-primary">Add New Product</a>
 
+    <!-- Check if the user is authenticated -->
+    @if(Auth::check())
+    <p>Welcome, {{ Auth::user()->name }}!</p>
+    <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
+@else
+    <a href="{{ route('login.google') }}" class="btn btn-danger">Login with Google</a>
+@endif
+
     <table border="1">
         <thead>
             <tr>
@@ -35,17 +43,14 @@
                     <td>{{ $product->kegunaan }}</td>
                     <td>
                         <a href="{{ route('products.edit', $product->id) }}">Edit</a>
-                        <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                            style="display:inline-block;">
+                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit"
-                                onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
-
         </tbody>
     </table>
 </body>
