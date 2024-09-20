@@ -13,18 +13,21 @@ const ProductDetail = () => {
   }
 
   return (
-    <section className="container mx-auto px-4 py-16">
-      {/* Breadcrumbs */}
-      <Breadcrumbs product={product} />
+    <div className='bg-orange-500'>
+      <section className="container mx-auto px-4 py-9 text-white">
+        {/* Breadcrumbs */}
+        <Breadcrumbs product={product} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Komponen gambar produk */}
-        <ProductImages images={product.images} />
+        <div className="pt-[1rem] pb-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Komponen gambar produk */}
+          <ProductImages images={product.images} />
 
-        {/* Komponen detail produk */}
-        <ProductContent product={product} />
-      </div>
-    </section>
+          {/* Komponen detail produk */}
+          <ProductContent product={product} />
+        </div>
+      </section>
+    </div>
+
   );
 };
 

@@ -2,13 +2,10 @@ import React from "react";
 
 const Content = ({ }) => {
     return (
-        <div className="bg-gray-300 me-[7rem] ms-[7rem] p-[3rem] text-black rounded-[1.5rem] pl-[2rem]">
-            <h1 className="text-5xl font-bold mb-8">Contact Us</h1>
-            <p className="text-gray-600 mb-8">
-                Get in touch with us through the following channels:
-            </p>
+        <div className="bg-white me-[7rem] ms-[7rem] p-[3rem] text-orange-500 rounded-[1.5rem] pl-[2rem] text-center">
+            <h1 className="text-5xl font-bold mb-8">Ayo Terhubung dengan Kami!</h1>
 
-            <ul className="list-none text-black flex flex-row gap-[2rem]">
+            <ul className="list-none text-black flex flex-row gap-[2rem] justify-center">
                 {/* WhatsApp */}
                 <li >
                     <a

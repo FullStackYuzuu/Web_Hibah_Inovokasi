@@ -7,15 +7,16 @@ const Footer = () => {
   // Function to determine if the link is active
   const isActive = (path) => location.pathname === path;
   return (
-    <footer className="bg-gray-900 text-white p-4">
+    <footer className="bg-white text-orange-500 p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <div>
-          {/* <span>Lorem Ipsum</span> */}
+        <div className="flex items-center">
+          <div className="w-8 h-8 bg-orange-500 mr-2"></div> {/* Logo */}
+          <span className="ml-[0.5rem] text-lg font-black">LAKSAMANA<br></br>TAPIOKA</span>
         </div>
         <div className="space-x-4">
           <Link
             to="/admin-login"
-            className={`text-gray-300 py-1 px-3 rounded-md hover:text-[13px] text-[12px]`}
+            className={`py-1 px-3 rounded-md hover:text-[13px] text-[12px]`}
           >
             Masuk Sebagai Admin
           </Link>

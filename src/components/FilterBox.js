@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from './Button';
 
 const FilterBox = () => {
     // State untuk slider harga dan ukuran
@@ -14,7 +15,7 @@ const FilterBox = () => {
     };
 
     return (
-        <div className="bg-gray-100 p-6 w-64 rounded-lg h-[30.2rem]">
+        <div className="bg-orange-500 p-6 w-64 rounded-lg h-[30.2rem] text-white">
             {/* Pencarian */}
             <div className="mb-4">
                 <input
@@ -26,18 +27,18 @@ const FilterBox = () => {
 
             {/* Filter Kategori */}
             <div className="mb-6">
-                <h3 className="font-semibold text-gray-700 mb-2">Kategori</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                    <li className="hover:text-black cursor-pointer">Semua Produk</li>
-                    <li className="hover:text-black cursor-pointer">Produk Unggulan</li>
-                    <li className="hover:text-black cursor-pointer">Diskon</li>
+                <h3 className="font-semibold mb-2">Kategori</h3>
+                <ul className="text-sm space-y-1">
+                    <li className="hover:text-orange-700 cursor-pointer">Semua Produk</li>
+                    <li className="hover:text-orange-700 cursor-pointer">Produk Unggulan</li>
+                    <li className="hover:text-orange-700 cursor-pointer">Diskon</li>
                 </ul>
                 {/* <p className="mt-2 text-xs text-gray-500 cursor-pointer">Lihat lainnya</p> */}
             </div>
 
             {/* Slider Harga */}
             <div className="mb-6">
-                <h3 className="font-semibold text-gray-700 mb-2">Harga</h3>
+                <h3 className="font-semibold mb-2">Harga</h3>
                 <input
                     type="range"
                     min="0"
@@ -78,9 +79,7 @@ const FilterBox = () => {
 
             {/* Tombol Aplikasikan */}
             <div>
-                <button className="w-full bg-black text-white py-2 rounded hover:bg-white hover:text-black">
-                    Apply
-                </button>
+                <Button text={"Apply"} className={"w-full bg-orange-200 text-orange-700 py-2 rounded hover:bg-orange-800 hover:text-orange-200"}/>
             </div>
         </div>
     );

@@ -14,3 +14,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Styling Slider */
+input[type="range"] {
+  -webkit-appearance: none; /* Menghilangkan default style browser */
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0; /* Warna track */
+  border-radius: 5px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: white; /* Warna thumb (pegangan) */
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: white; /* Warna thumb (pegangan) */
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+

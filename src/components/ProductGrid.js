@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const ProductGrid = ({ products }) => {
     return (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 text-white">
             <div className="flex flex-wrap -mx-4">
                 {products.map((product) => {
                     const price = parseFloat(product.price);
@@ -31,14 +31,14 @@ const ProductGrid = ({ products }) => {
                                         className="absolute h-full w-full object-cover" 
                                     />
                                     {discount > 0 && (
-                                        <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                                            {discount}% OFF
+                                        <div className="absolute top-2 right-2 bg-white text-orange-500 text-md px-4 py-4 rounded-full font-black">
+                                            {discount}%
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Ensure all cards have the same height */}
-                                <div className="p-4 bg-gray-100 flex flex-col justify-between h-[150px]">
+                                <div className="p-4 bg-orange-500 flex flex-col justify-between h-[150px]">
                                     <h3 className="text-lg font-semibold">{product.name}</h3>
 
                                     {/* Keep price section within a flex container */}
@@ -51,7 +51,7 @@ const ProductGrid = ({ products }) => {
                                         )}
 
                                         {/* Show discounted or original price */}
-                                        <p className={discount > 0 ? "text-red-500" : "text-gray-700"}>
+                                        <p className={discount > 0 ? "text-white font-black text-[2rem]" : "text-white font-black"}>
                                             Rp. {discountedPrice.toLocaleString()}
                                         </p>
                                     </div>
