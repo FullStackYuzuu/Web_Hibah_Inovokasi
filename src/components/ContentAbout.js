@@ -3,8 +3,11 @@ import React from "react";
 const Content = ({ }) => {
     return (
         <div className="flex flex-row bg-white me-[7rem] ms-[7rem] p-5 text-orange-500 rounded-[1.3rem] text-">
-            <div className="w-[40rem] bg-orange-500 m-[1rem] mr-[3rem]">
-            </div>
+            <img
+                src="/LogoUtama.png"
+                alt="Google"
+                className="w-[40rem] mr-2"
+            />{/* Logo */}
             <div>
                 <h1 className="text-5xl font-bold mb-8 mt-12">
                     Tentang Kami

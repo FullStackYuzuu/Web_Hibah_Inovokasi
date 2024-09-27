@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Pastikan import Link dari react-router-dom
 
-const Button = ({ text, className, to, imageSrc, imageAlt }) => {
+const Button = ({ text, className, to, imageSrc, imageAlt, onClick }) => {
     // Menentukan kelas default jika className tidak diberikan
-    const defaultClass = "bg-orange-500 text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2";
+    const defaultClass = "bg-orange-500 text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition-transform transform hover:scale-105 duration-200";
     const combinedClass = `${className || defaultClass}`;
 
     // Konten button dengan gambar opsional
@@ -30,7 +30,7 @@ const Button = ({ text, className, to, imageSrc, imageAlt }) => {
     }
 
     // Jika `to` tidak disediakan, gunakan <button>
-    return <button className={combinedClass}>{buttonContent}</button>;
+    return <button className={combinedClass} onClick={onClick}>{buttonContent}</button>;
 };
 
 export default Button;

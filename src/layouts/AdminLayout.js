@@ -1,16 +1,20 @@
+// components/AdminLayout.js
 import React from 'react';
-import AdminNavbar from '../components/AdminNavbar'; // Navbar berbeda untuk admin
-import AdminFooter from '../components/AdminFooter'; // Footer berbeda untuk admin
 import { Outlet } from 'react-router-dom';
+import AdminSidebar from '../components/AdminSidebar';
 
 const AdminLayout = () => {
     return (
-        <div>
-            <AdminNavbar /> {/* Navbar yang khusus untuk admin */}
-            <main>
-                <Outlet /> {/* Tempat untuk memasukkan halaman admin */}
+        <div className="flex h-screen">
+            {/* Sidebar */}
+            <aside className="w-[250px] bg-orange-500">
+                <AdminSidebar /> {/* Admin Sidebar */}
+            </aside>
+
+            {/* Main content */}
+            <main className="flex-1 p-4 overflow-auto">
+                <Outlet /> {/* Admin Pages */}
             </main>
-            <AdminFooter /> {/* Footer yang khusus untuk admin */}
         </div>
     );
 };

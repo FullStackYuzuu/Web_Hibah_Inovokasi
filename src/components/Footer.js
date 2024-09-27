@@ -10,8 +10,13 @@ const Footer = () => {
     <footer className="bg-white text-orange-500 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-orange-500 mr-2"></div> {/* Logo */}
-          <span className="ml-[0.5rem] text-lg font-black">LAKSAMANA<br></br>TAPIOKA</span>
+          <img
+            src="/LogoUtama.png"
+            alt="Google"
+            className="w-[10rem] mr-2"
+          />{/* Logo */}
+          {/* <div className="w-8 h-8 bg-orange-500 mr-2"></div> Logo */}
+          {/* <span className="ml-[0.5rem] text-lg font-black">LAKSAMANA<br></br>TAPIOKA</span> */}
         </div>
         <div className="space-x-4">
           <Link

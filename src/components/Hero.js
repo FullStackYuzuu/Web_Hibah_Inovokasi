@@ -14,7 +14,7 @@ const Hero = () => {
       {/* Konten teks */}
       <div className="relative z-10">
         <h1 className="text-[48px] md:text-[64px] lg:text-[96px] font-bold text-white mb-2">
-          LAKSAMANA TAPIOKA
+          RH LAKSAMANA
         </h1>
         <p className="text-white text-[18px] md:text-[24px]">
           Kepuasan Pelanggan adalah prioritas utama kami
