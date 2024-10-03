@@ -15,19 +15,14 @@ const ProductDetail = () => {
   return (
     <div className='bg-orange-500'>
       <section className="container mx-auto px-4 py-9 text-white">
-        {/* Breadcrumbs */}
         <Breadcrumbs product={product} />
 
-        <div className="pt-[1rem] pb-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Komponen gambar produk */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <ProductImages images={product.images} />
-
-          {/* Komponen detail produk */}
           <ProductContent product={product} />
         </div>
       </section>
     </div>
-
   );
 };
 

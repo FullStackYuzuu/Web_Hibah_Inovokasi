@@ -1,11 +1,9 @@
-// pages/AdminHome.js
 import React from 'react';
 import AdminSidebar from '../components/AdminSidebar';
 import AdminSalesChart from '../components/AdminSalesChart';
 import AdminStatsGrid from '../components/AdminStatsGrid';
 
 const AdminHome = () => {
-  // Dynamic sales data for the chart
   const salesData = [
     { month: 'Jan', sales: 4000 },
     { month: 'Feb', sales: 3000 },
@@ -16,7 +14,6 @@ const AdminHome = () => {
     { month: 'Jul', sales: 3490 },
   ];
 
-  // Dynamic stats data
   const statsData = [
     { title: 'Total Sales This Month', value: '$682.5' },
     { title: 'Total Customers', value: '321' },
@@ -26,17 +23,15 @@ const AdminHome = () => {
   return (
     <div className="flex min-h-screen">
       <AdminSidebar />
-      <div className="flex-1 flex justify-center items-center p-10 bg-white">
-        <div className="w-full max-w-[1200px]"> 
+      <div className="flex-1 flex justify-center items-center p-4 sm:p-10 bg-white">
+        <div className="w-full max-w-[1200px] px-4 sm:px-0">
           <h1 className="text-3xl font-bold text-center mb-10">Admin Dashboard</h1>
 
           <div className="mb-10">
             <h2 className="text-2xl text-center mb-5 font-semibold text-orange-500">Sales Overview</h2>
-            {/* Pass dynamic data to AdminSalesChart */}
             <AdminSalesChart data={salesData} />
           </div>
 
-          {/* Render AdminStatsGrid with dynamic data */}
           <AdminStatsGrid stats={statsData} />
         </div>
       </div>

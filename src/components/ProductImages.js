@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 
 const ProductImages = ({ images }) => {
-  // Batasi jumlah gambar maksimal yang ditampilkan menjadi 4
   const limitedImages = images.slice(0, 4);
-  const [selectedImage, setSelectedImage] = useState(limitedImages[0]); // Set gambar default
+  const [selectedImage, setSelectedImage] = useState(limitedImages[0]);
 
   return (
     <div>
-      {/* Gambar Utama */}
       <div className="relative pb-[100%] mb-4 bg-gray-300">
         <img
           src={selectedImage}
@@ -16,9 +14,8 @@ const ProductImages = ({ images }) => {
         />
       </div>
 
-      {/* Thumbnail hanya ditampilkan jika ada lebih dari 1 gambar */}
       {limitedImages.length > 1 && (
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap space-x-2">
           {limitedImages.map((image, index) => (
             <button
               key={index}

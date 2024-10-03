@@ -7,7 +7,7 @@ const DynamicTable = ({ data, addNewLink, editLink }) => {
   const [searchText, setSearchText] = useState('');
 
   if (!data || data.length === 0) {
-    return <p>No data available.</p>;
+    return <p className="text-center">No data available.</p>;
   }
 
   const handleDelete = (id) => {
@@ -16,38 +16,48 @@ const DynamicTable = ({ data, addNewLink, editLink }) => {
     }
   };
 
-  const columns = Object.keys(data[0]).map(key => {
-    if (typeof data[0][key] === 'string' || typeof data[0][key] === 'number') {
-      return {
-        name: key.charAt(0).toUpperCase() + key.slice(1),
-        selector: row => row[key],
-        sortable: true,
-      };
-    }
-    if (key.toLowerCase().includes('foto') || key.toLowerCase().includes('image')) {
-      return {
-        name: key.charAt(0).toUpperCase() + key.slice(1),
-        cell: row => <img src={row[key]} alt={key} className="w-16 h-16 object-cover" />,
-      };
-    }
-    return {
-      name: key.charAt(0).toUpperCase() + key.slice(1),
-      selector: row => row[key],
-    };
-  });
-
-  columns.push({
-    name: 'Aksi',
-    cell: row => (
-      <>
-        <Link to={`${editLink}/${row.id}`} className="text-blue-500 mr-3">Edit</Link>
-        <button onClick={() => handleDelete(row.id)} className="text-red-500">Hapus</button>
-      </>
-    ),
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  });
+  const columns = [
+    {
+      name: 'Foto',
+      cell: row => (
+        <img
+          src={row.images[0] || 'https://via.placeholder.com/100'}
+          alt={row.nama}
+          className="w-12 h-12 object-cover rounded-md"
+        />
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+    {
+      name: 'Nama',
+      selector: row => row.nama,
+      sortable: true,
+    },
+    {
+      name: 'Harga',
+      selector: row => row.harga,
+      sortable: true,
+      cell: row => `Rp. ${row.harga.toLocaleString()}`,
+    },
+    {
+      name: 'Deskripsi',
+      selector: row => row.deskripsi,
+    },
+    {
+      name: 'Aksi',
+      cell: row => (
+        <div className="flex space-x-2">
+          <Link to={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link>
+          <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:underline">Hapus</button>
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
 
   const filteredData = data.filter(item =>
     Object.values(item).some(val =>
@@ -57,8 +67,8 @@ const DynamicTable = ({ data, addNewLink, editLink }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4 flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Daftar Item</h2>
+      <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-0">Daftar Item</h2>
         <Button text="Add New" to={addNewLink} className="bg-orange-500 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105" />
       </div>
 
