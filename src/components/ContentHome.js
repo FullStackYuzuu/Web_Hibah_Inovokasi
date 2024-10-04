@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Button from './Button';
-import ProductGrid from './ProductGrid';
+import ProductGrid from './ProductGrid'; // Pastikan ProductGrid sudah di-import
 
 const Content = ({ products }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3; // Atur berapa produk per halaman
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
         <section className="w-full mx-auto bg-orange-500 py-12 4xl:py-20">
 
             {/* Section Tentang Kami */}
-            <section className="relative bg-cover bg-center h-[40rem] px-4 sm:px-8 lg:px-12 text-white py-16 4xl:h-[60rem] 4xl:py-20 text-center sm:text-right  brightness-95"
+            <section className="relative bg-cover bg-center h-[40rem] px-4 sm:px-8 lg:px-12 text-white py-16 4xl:h-[60rem] 4xl:py-20 text-center sm:text-right brightness-95"
                 style={{ backgroundImage: "url('/page/image2.svg')" }}>
                 <div className="absolute inset-0 bg-black opacity-50"></div>
 
@@ -31,11 +39,23 @@ const Content = ({ products }) => {
                     Produk unggulan dari kami yang sudah terbukti oleh waktu.
                 </p>
 
-                {/* Grid Produk */}
-                <ProductGrid products={products} />
+                {/*  ProductGrid */}
+                <ProductGrid 
+                    products={products} 
+                    currentPage={currentPage} 
+                    itemsPerPage={itemsPerPage} 
+                    onPageChange={handlePageChange} 
+                />
+
+                {/* Tombol Lihat Lainnya */}
+                <Button
+                    text="Lihat Lainnya"
+                    to="/catalog"
+                    className="mt-8 bg-orange-500 text-white py-3 px-6 rounded-lg transition-transform transform hover:scale-105 duration-200 4xl:py-5 4xl:px-10"
+                />
             </div>
         </section>
     );
-}
+};
 
 export default Content;

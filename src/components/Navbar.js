@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const location = useLocation();
-    const [isOpen, setIsOpen] = useState(false); // State untuk toggle navbar pada mobile
+    const [isOpen, setIsOpen] = useState(false); // State for mobile toggle
 
     // Function to determine if the link is active
     const isActive = (path) => location.pathname === path;
@@ -16,15 +16,26 @@ const Navbar = () => {
                         src="/LogoUtama.png"
                         alt="Laksamana Tapioka"
                         className="w-[8rem] sm:w-[10rem] 3xl:w-[12rem] 4xl:w-[14rem] mr-2"
-                    />{/* Logo */}
+                    />
                 </div>
 
                 {/* Toggle button for mobile */}
                 <button
                     className="block md:hidden text-orange-500 focus:outline-none"
                     onClick={() => setIsOpen(!isOpen)}>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 6h16M4 12h16m-7 6h7"
+                        />
                     </svg>
                 </button>
 
@@ -32,28 +43,28 @@ const Navbar = () => {
                 <div className="hidden md:flex space-x-[1rem] lg:space-x-[2rem] font-light text-[14px] lg:text-[16px] 4xl:text-[18px]">
                     <Link
                         to="/"
-                        className={`${isActive('/') ? 'bg-orange-500 text-white py-2 px-4' : 'text-orange-500'} 
+                        className={`${isActive('/') ? 'bg-orange-500 text-white py-2 px-4 transition-all duration-300' : 'text-orange-500 transition-all duration-300'} 
             rounded-lg hover:text-lg lg:hover:text-xl`}
                     >
                         Home
                     </Link>
                     <Link
                         to="/catalog"
-                        className={`${isActive('/catalog') ? 'bg-orange-500 text-white py-2 px-4' : 'text-orange-500'} 
+                        className={`${isActive('/catalog') ? 'bg-orange-500 text-white py-2 px-4 transition-all duration-300' : 'text-orange-500 transition-all duration-300'} 
             rounded-lg hover:text-lg lg:hover:text-xl`}
                     >
                         Catalog
                     </Link>
                     <Link
                         to="/about"
-                        className={`${isActive('/about') ? 'bg-orange-500 text-white py-2 px-4' : 'text-orange-500'} 
+                        className={`${isActive('/about') ? 'bg-orange-500 text-white py-2 px-4 transition-all duration-300' : 'text-orange-500 transition-all duration-300'} 
             rounded-lg hover:text-lg lg:hover:text-xl`}
                     >
                         About
                     </Link>
                     <Link
                         to="/contact"
-                        className={`${isActive('/contact') ? 'bg-orange-500 text-white py-2 px-4' : 'text-orange-500'} 
+                        className={`${isActive('/contact') ? 'bg-orange-500 text-white py-2 px-4 transition-all duration-300' : 'text-orange-500 transition-all duration-300'} 
             rounded-lg hover:text-lg lg:hover:text-xl`}
                     >
                         Contact
@@ -63,8 +74,8 @@ const Navbar = () => {
 
             {/* Mobile Popup Menu */}
             {isOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-                    <div className="bg-white w-[80%] max-w-[400px] lg:max-w-[600px] p-6 rounded-lg shadow-lg">
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center transition-opacity duration-500 ease-in-out">
+                    <div className="bg-white w-[80%] max-w-[400px] lg:max-w-[600px] p-6 rounded-lg shadow-lg opacity-100 transition-opacity duration-500 ease-in">
                         <button
                             onClick={() => setIsOpen(false)}
                             className="absolute top-4 right-4 text-orange-500 text-[24px] font-bold"
@@ -76,7 +87,7 @@ const Navbar = () => {
                                 to="/"
                                 className={`${isActive('/') ? 'bg-orange-500 text-white py-2 px-4' : 'text-orange-500'} 
                 rounded-lg`}
-                                onClick={() => setIsOpen(false)} // Tutup popup saat diklik
+                                onClick={() => setIsOpen(false)}
                             >
                                 Home
                             </Link>

@@ -1,4 +1,3 @@
-// pages/AdminSales.js
 import React from 'react';
 import DynamicTable from '../components/DynamicTable';
 
@@ -9,14 +8,22 @@ const salesData = [
 ];
 
 const AdminSales = () => {
+  const columns = [
+    { name: 'Nomor Telepon', selector: row => row.phone_number, sortable: true },
+    { name: 'Jumlah', selector: row => row.amount, sortable: true },
+    { name: 'Total Harga', selector: row => `Rp. ${row.total_price.toLocaleString()}`, sortable: true },
+    { name: 'Waktu Penjualan', selector: row => row.sale_time, sortable: true },
+  ];
+
   return (
-    <div>
-      <h1>Daftar Penjualan</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Daftar Penjualan</h1>
       <DynamicTable
         data={salesData}
         addNewLink="/admin/sales/add"
         editLink="/admin/sales/edit"
         deleteLink="/admin/sales/delete"
+        columns={columns}
       />
     </div>
   );

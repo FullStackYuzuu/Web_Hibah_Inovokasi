@@ -1,46 +1,36 @@
 import React from 'react';
-import AdminSalesChart from '../components/AdminSalesChart';
-import AdminStatsGrid from '../components/AdminStatsGrid';
+import AdminLoginButton from '../components/AdminLoginButton';
 
-const AdminHome = () => {
-  // Dynamic sales data for the chart
-  const salesData = [
-    { month: 'Jan', sales: 4000 },
-    { month: 'Feb', sales: 3000 },
-    { month: 'Mar', sales: 2000 },
-    { month: 'Apr', sales: 2780 },
-    { month: 'May', sales: 1890 },
-    { month: 'Jun', sales: 2390 },
-    { month: 'Jul', sales: 3490 },
-  ];
-
-  // Dynamic stats data
-  const statsData = [
-    { title: 'Total Sales This Month', value: '$682.5' },
-    { title: 'Total Customers', value: '321' },
-    { title: 'Activity', value: '$540.50' },
-  ];
-
+const AdminLoginPage = () => {
   return (
-    <div className="flex min-h-screen">
-      
+    <div className="min-h-screen flex flex-col items-center justify-center bg-orange-500 text-white">
+      <div className="flex flex-col items-center px-4 lg:px-0"> {/* Adjust padding for smaller screens */}
+        <div className="flex flex-col items-center">
+          <h1 className="font-black text-5xl sm:text-7xl md:text-9xl">ADMIN</h1> {/* Font sizes for different screen sizes */}
+          <h2 className="font-black text-xl sm:text-2xl md:text-3xl mt-4">LOGIN PAGE</h2>
+        </div>
 
-      <div className="flex-1 p-4">
-        <div className="w-full max-w-[1200px] mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-10">Admin Dashboard</h1>
-
-          <div className="mb-10">
-            <h2 className="text-2xl text-center mb-5 font-semibold text-orange-500">Sales Overview</h2>
-            {/* Pass dynamic data to AdminSalesChart */}
-            <AdminSalesChart data={salesData} />
+        <div className="mt-8 p-4 flex items-center bg-orange-600 rounded-[2rem] w-full max-w-lg lg:max-w-xl xl:max-w-2xl h-auto md:h-56"> {/* Adjust responsive width */}
+          <div className="flex items-center justify-center ml-0 md:ml-[18px] bg-orange-700 rounded-[2rem] w-full h-auto md:w-[570px] md:h-[185px]">
+            <AdminLoginButton />
           </div>
+        </div>
+      </div>
 
-          {/* Render AdminStatsGrid with dynamic data */}
-          <AdminStatsGrid stats={statsData} />
+      {/* Left and Right Column (adjust for different screen sizes) */}
+      <div className="hidden lg:flex absolute inset-y-0 left-0">
+        <div className="h-full w-40 xl:w-64 bg-orange-600 flex flex-col justify-around items-center"> {/* Adjust width for 1024px */}
+          {/* Left column content (optional) */}
+        </div>
+      </div>
+      
+      <div className="hidden lg:flex absolute inset-y-0 right-0">
+        <div className="h-full w-40 xl:w-64 bg-orange-600 flex flex-col justify-around items-center"> {/* Adjust width for 1024px */}
+          {/* Right column content (optional) */}
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminHome;
+export default AdminLoginPage;

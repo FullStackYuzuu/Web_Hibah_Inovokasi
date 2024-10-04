@@ -21,10 +21,9 @@ const AdminHome = () => {
   ];
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-      <div className="flex-1 flex justify-center items-center p-4 sm:p-10 bg-white">
-        <div className="w-full max-w-[1200px] px-4 sm:px-0">
+    <div className="flex min-h-screen bg-gray-50">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-10">
+        <div className="w-full max-w-[1200px] bg-white shadow-md rounded-lg px-4 sm:px-8 py-8">
           <h1 className="text-3xl font-bold text-center mb-10">Admin Dashboard</h1>
 
           <div className="mb-10">

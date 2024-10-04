@@ -13,13 +13,17 @@ const AddEditUser = ({ onSubmit }) => {
   const user = userData.find(u => u.id === parseInt(id)) || {}; // Cari pengguna yang sesuai atau default kosong
 
   const userFields = [
-    { name: 'name', label: 'Nama Pengguna', type: 'text' },
-    { name: 'email', label: 'Email', type: 'email' },
-    { name: 'password', label: 'Password', type: 'password' },
-    { name: 'google_id', label: 'Google ID', type: 'text' },
+    { name: 'name', label: 'Nama Pengguna', type: 'text', required: true }, // Required field
+    { name: 'email', label: 'Email', type: 'email', required: true }, // Required field
+    { name: 'password', label: 'Password', type: 'password', required: true }, // Required field
+    { name: 'google_id', label: 'Google ID', type: 'text' }, // Not required
   ];
 
-  return <DynamicForm fields={userFields} onSubmit={onSubmit} initialData={user} />;
+  return (
+    <div className="p-4 sm:p-8 lg:p-12 bg-gray-50 min-h-screen">
+      <DynamicForm fields={userFields} onSubmit={onSubmit} initialData={user} cancelLink="/admin/users" />
+    </div>
+  );
 };
 
 export default AddEditUser;

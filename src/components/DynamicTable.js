@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from './Button';
 import { Link } from 'react-router-dom';
 
-const DynamicTable = ({ data, addNewLink, editLink }) => {
+const DynamicTable = ({ data, addNewLink, editLink, deleteLink, columns }) => {
   const [searchText, setSearchText] = useState('');
 
   if (!data || data.length === 0) {
@@ -16,48 +16,18 @@ const DynamicTable = ({ data, addNewLink, editLink }) => {
     }
   };
 
-  const columns = [
-    {
-      name: 'Foto',
-      cell: row => (
-        <img
-          src={row.images[0] || 'https://via.placeholder.com/100'}
-          alt={row.nama}
-          className="w-12 h-12 object-cover rounded-md"
-        />
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
-    {
-      name: 'Nama',
-      selector: row => row.nama,
-      sortable: true,
-    },
-    {
-      name: 'Harga',
-      selector: row => row.harga,
-      sortable: true,
-      cell: row => `Rp. ${row.harga.toLocaleString()}`,
-    },
-    {
-      name: 'Deskripsi',
-      selector: row => row.deskripsi,
-    },
-    {
-      name: 'Aksi',
-      cell: row => (
-        <div className="flex space-x-2">
-          <Link to={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link>
-          <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:underline">Hapus</button>
-        </div>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
-  ];
+  const actionColumn = {
+    name: 'Aksi',
+    cell: row => (
+      <div className="flex space-x-2">
+        <Link to={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link>
+        <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:underline">Hapus</button>
+      </div>
+    ),
+    ignoreRowClick: true,
+    allowOverflow: true,
+    button: true,
+  };
 
   const filteredData = data.filter(item =>
     Object.values(item).some(val =>
@@ -83,7 +53,7 @@ const DynamicTable = ({ data, addNewLink, editLink }) => {
       </div>
 
       <DataTable
-        columns={columns}
+        columns={[...columns, actionColumn]} // Merge dynamic columns with the action column
         data={filteredData}
         pagination
         highlightOnHover

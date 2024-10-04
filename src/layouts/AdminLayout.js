@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
 
+// Dummy user data
+const dummyUser = {
+  name: 'John Doe', // Replace with actual dynamic user data when available
+};
+
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -35,11 +40,9 @@ const AdminLayout = () => {
 
       {/* Sidebar (popup) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-[250px] bg-orange-500 transition-transform transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-40 w-[250px] bg-orange-500 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <AdminSidebar />
+        <AdminSidebar user={dummyUser} /> {/* Pass user data to AdminSidebar */}
       </aside>
 
       {/* Backdrop overlay when sidebar is open */}

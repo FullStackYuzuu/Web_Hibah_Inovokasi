@@ -13,14 +13,18 @@ const AddEditSales = ({ onSubmit }) => {
   const sale = salesData.find(s => s.id === parseInt(id)) || {}; // Cari data penjualan yang sesuai atau default kosong
 
   const salesFields = [
-    { name: 'product_id', label: 'Product ID', type: 'number' },
-    { name: 'phone_number', label: 'Nomor Telepon', type: 'text' },
-    { name: 'amount', label: 'Jumlah', type: 'number' },
-    { name: 'total_price', label: 'Total Harga', type: 'number' },
-    { name: 'sale_time', label: 'Waktu Penjualan', type: 'datetime-local' },
+    { name: 'product_id', label: 'Product ID', type: 'number', required: true }, // Required field
+    { name: 'phone_number', label: 'Nomor Telepon', type: 'text', required: true }, // Required field
+    { name: 'amount', label: 'Jumlah', type: 'number', required: true }, // Required field
+    { name: 'total_price', label: 'Total Harga', type: 'number', required: true }, // Required field
+    { name: 'sale_time', label: 'Waktu Penjualan', type: 'datetime-local', required: true }, // Required field
   ];
 
-  return <DynamicForm fields={salesFields} onSubmit={onSubmit} initialData={sale} />;
+  return (
+    <div className="p-4 sm:p-8 lg:p-12 bg-gray-50 min-h-screen">
+      <DynamicForm fields={salesFields} onSubmit={onSubmit} initialData={sale} cancelLink="/admin/sales" />
+    </div>
+  );
 };
 
 export default AddEditSales;

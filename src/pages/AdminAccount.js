@@ -1,4 +1,3 @@
-// pages/AdminAccount.js
 import React from 'react';
 import DynamicTable from '../components/DynamicTable';
 
@@ -9,14 +8,21 @@ const userData = [
 ];
 
 const AdminAccount = () => {
+  const columns = [
+    { name: 'Nama Pengguna', selector: row => row.name, sortable: true },
+    { name: 'Email', selector: row => row.email, sortable: true },
+    { name: 'Email Tervalidasi', selector: row => row.email_verified_at, sortable: true },
+  ];
+
   return (
-    <div>
-      <h1>Daftar Pengguna</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Daftar Pengguna</h1>
       <DynamicTable
         data={userData}
         addNewLink="/admin/accounts/add"
         editLink="/admin/accounts/edit"
         deleteLink="/admin/accounts/delete"
+        columns={columns}
       />
     </div>
   );

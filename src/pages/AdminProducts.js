@@ -27,6 +27,19 @@ const productData = [
 ];
 
 const AdminProducts = () => {
+  const columns = [
+    { name: 'Nama Produk', selector: row => row.nama, sortable: true },
+    { name: 'Harga', selector: row => `Rp. ${row.harga.toLocaleString()}`, sortable: true },
+    { name: 'Deskripsi', selector: row => row.deskripsi, sortable: false },
+    {
+      name: 'Foto',
+      cell: row => <img src={row.images[0]} alt={row.nama} className="w-12 h-12 object-cover rounded-md" />,
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+
   return (
     <div className="p-4 sm:p-8">
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Daftar Produk</h1>
@@ -34,6 +47,7 @@ const AdminProducts = () => {
         data={productData}
         addNewLink="/admin/products/add"
         editLink="/admin/products/edit"
+        columns={columns}
       />
     </div>
   );
