@@ -174,6 +174,9 @@ class AdminController extends Controller
             $request->only(['product_id', 'amount', 'total_price', 'sale_time'])
         );
 
+        var_dump($sale);
+        die();
+
         return redirect('/admin/sales')->with('success', 'Penjualan berhasil disimpan.');
     }
 

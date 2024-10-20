@@ -78,11 +78,6 @@ const AddEditSales = ({ onSubmit }) => {
         },
     ];
 
-    const handleSubmit = (formData) => {
-        formData.total_price = totalPrice; // Tambahkan total_price ke formData sebelum submit
-        onSubmit(formData);
-    };
-
     return (
         <div className="p-4 sm:p-8 lg:p-12 bg-gray-50 min-h-screen">
             <DynamicForm

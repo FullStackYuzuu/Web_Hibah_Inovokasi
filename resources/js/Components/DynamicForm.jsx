@@ -3,7 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Link } from '@inertiajs/react';
 import Button from './Button';
 
-const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink, onSubmit }) => {
+const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink }) => {
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
 
@@ -15,12 +15,13 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink, onSubmit
         const { name, value, files } = e.target;
 
         if (e.target.type === 'file') {
-            setFormData({ ...formData, [name]: files });
+            setFormData({ ...formData, [name]: files }); // Menyimpan file ke formData
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFormData({ ...formData, [name]: value }); // Menyimpan value ke formData
         }
     };
 
+    // Handle perubahan pada input kustom
     const handleCustomChange = (name, value) => {
         setFormData({ ...formData, [name]: value });
     };
@@ -28,21 +29,28 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink, onSubmit
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const formDataToSubmit = { ...formData };
+        const formDataToSubmit = new FormData();
+
+        if (formData.id) {
+            formDataToSubmit.append('id', formData.id);
+        }
+
         fields.forEach((field) => {
-            if (field.type === 'custom' && formData[field.name] === undefined) {
-                formDataToSubmit[field.name] = '';
+            if (field.type === 'file' && formData[field.name]) {
+                Array.from(formData[field.name]).forEach(file => {
+                    formDataToSubmit.append(field.name, file);
+                });
+            } else if (field.type === 'custom') {
+                // Tangani custom field yang diisi melalui handleCustomChange
+                formDataToSubmit.append(field.name, formData[field.name] || '');
+            } else {
+                formDataToSubmit.append(field.name, formData[field.name] || '');
             }
         });
 
-        if (onSubmit) {
-            onSubmit(formDataToSubmit); // Panggil onSubmit dengan formData yang sudah lengkap
-        } else {
-            // Default behaviour jika tidak ada onSubmit di-pass
-            Inertia.post(submitUrl, formDataToSubmit, {
-                onError: (errors) => setErrors(errors),
-            });
-        }
+        Inertia.post(submitUrl, formDataToSubmit, {
+            onError: (errors) => setErrors(errors),
+        });
     };
 
     return (
@@ -67,10 +75,7 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink, onSubmit
                                 className="w-full p-2 border rounded"
                             />
                         ) : field.type === 'custom' ? (
-                            React.cloneElement(field.customInput, {
-                                value: formData[field.name] || '',
-                                onChange: (value) => handleCustomChange(field.name, value)
-                            })
+                            field.customInput // Tampilkan customInput jika ada
                         ) : (
                             <input
                                 type={field.type}
