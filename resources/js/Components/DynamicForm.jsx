@@ -26,8 +26,25 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink }) => {
         setFormData({ ...formData, [name]: value });
     };
 
+    // Validasi form untuk field yang required
+    const validateForm = () => {
+        const newErrors = {};
+        fields.forEach((field) => {
+            if (field.required && (!formData[field.name] || formData[field.name].length === 0)) {
+                newErrors[field.name] = `${field.label} is required`; // Pesan error jika required
+            }
+        });
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Return true jika tidak ada error
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Lakukan validasi form
+        if (!validateForm()) {
+            return; // Jika ada error, jangan kirim ke server
+        }
 
         const formDataToSubmit = new FormData();
 
@@ -41,7 +58,6 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink }) => {
                     formDataToSubmit.append(field.name, file);
                 });
             } else if (field.type === 'custom') {
-                // Tangani custom field yang diisi melalui handleCustomChange
                 formDataToSubmit.append(field.name, formData[field.name] || '');
             } else {
                 formDataToSubmit.append(field.name, formData[field.name] || '');
@@ -49,7 +65,7 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink }) => {
         });
 
         Inertia.post(submitUrl, formDataToSubmit, {
-            onError: (errors) => setErrors(errors),
+            onError: (errors) => setErrors(errors), // Tangani error dari server
         });
     };
 

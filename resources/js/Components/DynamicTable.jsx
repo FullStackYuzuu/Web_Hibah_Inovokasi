@@ -34,14 +34,12 @@ const DynamicTable = ({ data, addNewLink, editLink, columns, table }) => {
         name: 'Aksi',
         cell: row => (
             <div className="flex space-x-2">
-                <Link href={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link>
+                <Link href={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link> {/* Mengarahkan ke halaman edit */}
                 <button onClick={() => handleDelete(table, row.id)} className="text-red-500 hover:underline">Hapus</button>
             </div>
         ),
-        // ignoreRowClick: true,
-        // allowOverflow: true,
-        // button: true,
     };
+
 
     const filteredData = data.filter(item =>
         Object.values(item).some(val =>

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
@@ -55,8 +54,34 @@ class AdminController extends Controller
 
     public function index()
     {
-        return Inertia::render('AdminHome', []);
+        // Contoh data statistik yang dapat dihitung dari database
+        $totalPenjualanBulanIni = 682500; // total dalam rupiah
+        $produkTerjualPalingBanyak = 'Produk A'; // nama produk
+        $totalPenjualanSepanjangMasa = 5405000; // total dalam rupiah
+
+        $statsData = [
+            ['title' => 'Total Penjualan Bulan Ini', 'value' => 'Rp ' . number_format($totalPenjualanBulanIni, 0, ',', '.')],
+            ['title' => 'Produk Terjual Paling Banyak Bulan Ini', 'value' => $produkTerjualPalingBanyak],
+            ['title' => 'Total Penjualan Sepanjang Masa', 'value' => 'Rp ' . number_format($totalPenjualanSepanjangMasa, 0, ',', '.')],
+        ];
+
+        // Data penjualan bulanan (contoh saja)
+        $salesData = [
+            ['month' => 'Jan', 'sales' => 4000000],
+            ['month' => 'Feb', 'sales' => 3000000],
+            ['month' => 'Mar', 'sales' => 2000000],
+            ['month' => 'Apr', 'sales' => 2780000],
+            ['month' => 'May', 'sales' => 1890000],
+            ['month' => 'Jun', 'sales' => 2390000],
+            ['month' => 'Jul', 'sales' => 3490000],
+        ];
+
+        return Inertia::render('AdminHome', [
+            'statsData' => $statsData,
+            'salesData' => $salesData,
+        ]);
     }
+
 
     public function product()
     {
@@ -145,40 +170,67 @@ class AdminController extends Controller
     // Menampilkan halaman edit penjualan berdasarkan ID
     public function editSales($id)
     {
-        // Mencari data penjualan berdasarkan ID dan produk terkait
-        $sale = Sales::with('product')->findOrFail($id);
+        $sale = Sales::with('product')->findOrFail($id); // Dapatkan penjualan dengan produk terkait
+        $products = Product::all(); // Semua produk untuk dropdown
 
-        // Mengambil semua produk dengan price dan discount untuk dropdown
-        $products = Product::select('id', 'name', 'price', 'discount')->get();
-
-        // Mengirim data penjualan dan produk ke halaman form edit
         return Inertia::render('AddEditSales', [
-            'salesData' => SalesResource::make($sale), // Kirim data penjualan untuk diisi di form
-            'products' => $products, // Kirim produk dengan harga dan diskon
+            'salesData' => [$sale],  // Mengirimkan data penjualan ke komponen
+            'products' => $products, // Mengirim produk untuk select option
+            'id' => $id // Kirim id ke view agar dapat digunakan di komponen React
         ]);
     }
+
 
     // Menyimpan penjualan baru atau mengedit penjualan yang ada
     public function storeSales(Request $request)
     {
+        // Validasi input dari form
         $validated = $request->validate([
             'id' => 'nullable|exists:sales,id',
             'product_id' => 'required|exists:products,id',
             'amount' => 'required|integer|min:1',
-            'total_price' => 'required|numeric|min:0',
             'sale_time' => 'required|date',
         ]);
 
+        // Ambil produk yang dipilih dari database
+        $product = Product::findOrFail($request->product_id);
+
+        // Cek apakah jumlah pesanan memenuhi stok yang tersedia
+        if ($request->amount > $product->stock) {
+            return response()->json(['error' => 'Jumlah pesanan melebihi stok yang tersedia.'], 400);
+        }
+
+        // Cek apakah jumlah pesanan memenuhi minimum order
+        if ($request->amount < $product->minOrder) {
+            return response()->json(['error' => 'Jumlah pesanan kurang dari minimum order.'], 400);
+        }
+
+        // Hitung total harga berdasarkan harga produk, diskon, dan jumlah
+        $price = $product->price;
+        $discount = $product->discount / 100; // Mengonversi diskon dari persentase ke desimal
+        $discountedPrice = $price - ($price * $discount);
+        $totalPrice = $discountedPrice * $request->amount;
+
+        // Jika syarat terpenuhi, kurangi stok produk
+        $product->stock -= $request->amount;
+        $product->save();
+
+        // Simpan penjualan ke database dengan total_price yang dihitung
         $sale = Sales::updateOrCreate(
-            ['id' => $request->id],
-            $request->only(['product_id', 'amount', 'total_price', 'sale_time'])
+            ['id' => $request->id], // Jika ID ada, lakukan update, jika tidak, buat baru
+            [
+                'product_id' => $request->product_id,
+                'amount' => $request->amount,
+                'total_price' => $totalPrice, // Masukkan total harga yang dihitung
+                'sale_time' => $request->sale_time
+            ]
         );
 
-        var_dump($sale);
-        die();
-
-        return redirect('/admin/sales')->with('success', 'Penjualan berhasil disimpan.');
+        return response()->json(['success' => 'Penjualan berhasil disimpan.']);
     }
+
+
+
 
 
     public function account()

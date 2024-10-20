@@ -23,9 +23,10 @@ Route::get('/product/{id}', [HomeController::class, 'ProductDetail']);
 Route::get('/admin-login', function () {
     return Inertia::render('AdminLoginPage');
 });
-// Route::get('/auth/google/redirect', [AdminController::class, 'redirect']);
-// Route::get('/auth/google/callback', [AdminController::class, 'callback']);
-// Route::get('/admin/logout', [AdminController::class, 'logout']);
+
+Route::get('/auth/google/redirect', [AdminController::class, 'redirect']);
+Route::get('/auth/google/callback', [AdminController::class, 'callback']);
+Route::get('/admin/logout', [AdminController::class, 'logout']);
 
 // // Route untuk admin dengan middleware
 // Route::middleware(['auth', 'admin'])->group(function () {
