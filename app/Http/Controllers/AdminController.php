@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
@@ -10,38 +11,28 @@ use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use App\Models\Sales;
 use App\Http\Resources\SalesResource;
-
 use DB;
 
 class AdminController extends Controller
 {
-    public function redirect()
+
+    public function login(Request $request)
     {
-        return Socialite::driver('google')->redirect();
+        $gUser = Socialite::driver('google')->user();
+
+        $user = User::where('email', $gUser->getEmail())->first();
+
+        if ($user) {
+            Auth::login($user);
+
+            return redirect('/admin');
+        } else {
+            // Redirect with an error message passed to Inertia
+            // return Inertia::location('/admin-login')->with('error', 'No Email Registered');
+            return redirect('/admin-login')->with('error', 'Email Tidak Terdaftar.');
+        }
     }
 
-    public function callback()
-    {
-        try {
-            $googleUser = Socialite::driver('google')->user();
-        } catch (\Exception $e) {
-            return redirect('/admin-login');
-        }
-
-        // Periksa apakah email pengguna ada di database
-        $user = User::where('email', $googleUser->email)->first();
-
-        if (!$user || !$user->is_admin) {
-            return redirect('/admin-login')->withErrors(['email' => 'Akun ini tidak memiliki akses admin.']);
-        }
-
-        // Login pengguna
-        auth('web')->login($user);
-        session()->regenerate();
-
-        // Redirect ke halaman admin
-        return redirect('/admin');
-    }
 
     public function logout(Request $request)
     {
