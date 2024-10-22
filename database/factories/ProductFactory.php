@@ -25,6 +25,7 @@ class ProductFactory extends Factory
             'stock' => $this->faker->numberBetween(1, 100),
             'minOrder' => $this->faker->numberBetween(1, 5),
             'category' => $this->faker->word,
+            'image_path' => $this->faker->imageUrl(640, 480, 'products', true),
         ];
     }
 }

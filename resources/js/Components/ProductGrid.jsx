@@ -35,11 +35,18 @@ const ProductGrid = ({ products = [], currentPage, itemsPerPage, onPageChange, s
                                 className="block bg-gray-300 h-full"
                             >
                                 <div className="relative pb-[100%] bg-gray-500 overflow-hidden">
-                                    <img
-                                        src={(product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/500'}
-                                        alt={product.name}
-                                        className="absolute h-full w-full object-cover transition-transform duration-200"
-                                    />
+                                    {product.image_path ? (
+                                        <img
+                                            src={`/storage/${product.image_path}`}
+                                            alt={product.name}
+                                            className="absolute h-full w-full object-cover transition-transform duration-200"
+                                        />
+                                    ) : (
+                                        <span className="absolute h-full w-full flex items-center justify-center bg-gray-200 text-gray-600">
+                                            No Photo
+                                        </span>
+                                    )}
+
                                     {discount > 0 && (
                                         <div className="absolute top-2 right-2 bg-white text-orange-500 text-md px-4 py-4 rounded-full font-black">
                                             {discount}% OFF

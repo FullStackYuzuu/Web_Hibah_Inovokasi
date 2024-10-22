@@ -38,9 +38,9 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'is_admin' => 'boolean',  // Casting is_admin ke boolean
-    ];
+    // protected $casts = [
+    //     'email_verified_at' => 'datetime',
+    //     'password' => 'hashed',
+    //     'is_admin' => 'boolean',  // Casting is_admin ke boolean
+    // ];
 }

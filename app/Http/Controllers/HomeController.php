@@ -8,7 +8,9 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use Inertia\Inertia;
-use DB;
+use App\Models\Sales;
+use App\Models\Settings;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -17,7 +19,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $products = Product::with('images')->take(3)->get();
+        $products = Product::take(3)->get();
         return Inertia::render('Home', [
             'products' => ProductResource::collection($products)->toArray(request()), // Kirim ke frontend
         ]);
@@ -26,8 +28,22 @@ class HomeController extends Controller
 
     public function Contact()
     {
-        return Inertia::render('Contact', []);
+        // Fetch settings where the key matches one of the specified values
+        $settings = Settings::whereIn('key', [
+            'whatsapp_number',
+            'email',
+            'tiktok',
+            'instagram',
+            'shopee',
+            'tokopedia',
+            'facebook'
+        ])->pluck('value', 'key'); // Use pluck to get key-value pairs
+
+        return Inertia::render('Contact', [
+            'settings' => $settings
+        ]);
     }
+
 
     public function About()
     {
@@ -36,16 +52,47 @@ class HomeController extends Controller
 
     public function Catalog()
     {
-        $products = Product::with('images')->get(); // Pastikan $products adalah koleksi
+        $products = Product::get(); // Pastikan $products adalah koleksi
         return Inertia::render('Catalog', [
             'products' => ProductResource::collection($products)->toArray(request()), // Pastikan diubah ke array
         ]);
     }
 
+    public function ProductBuy(Request $request, $id, $quantity)
+    {
+        // Ambil data produk berdasarkan ID
+        $product = Product::findOrFail($id);
+
+        // Hitung total harga
+        $price = $product->discount ? $product->price - ($product->price * ($product->discount / 100)) : $product->price;
+        $totalPrice = $price * $quantity;
+
+        // Simpan data transaksi ke tabel sales
+        $sale = Sales::create([
+            'product_id' => $id,
+            'amount' => $quantity,
+            'total_price' => $totalPrice,
+        ]);
+
+        // Kurangi stok produk
+        $product->stock -= $quantity;
+        $product->save();
+
+        // Ambil nomor WhatsApp dari tabel settings
+        $whatsappNumber = Settings::where('key', 'whatsapp_number')->first()->value;
+
+        // Format pesan WhatsApp
+        $whatsappMessage = urlencode("*ORDER RH LAKSAMANA*\n*ID Pesanan*: {$sale->id}\n*Nama Produk*: {$product->name}\n*Kuantitas*: {$quantity} Kg\n*Total Harga*: Rp. " . number_format($totalPrice, 0, ',', '.'));
+
+        // Arahkan ke WhatsApp dengan pesan yang telah di-generate
+        return redirect()->away("https://wa.me/{$whatsappNumber}/?text={$whatsappMessage}");
+    }
+
+
     public function ProductDetail($id)
     {
         // Ambil data produk berdasarkan ID
-        $product = Product::with(['images'])->find($id);
+        $product = Product::find($id);
 
         // Jika produk tidak ditemukan, kembalikan respons 404
         if (!$product) {

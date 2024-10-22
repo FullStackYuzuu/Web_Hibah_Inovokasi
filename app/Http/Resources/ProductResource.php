@@ -24,9 +24,7 @@ class ProductResource extends JsonResource
             'stock' => $this->stock,
             'min_order' => $this->minOrder,
             'category' => $this->category,
-            'images' => $this->images->map(function ($image) {
-                return $image->image_path; // Ambil hanya 'image_path'
-            }), // Mengambil gambar terkait dari relasi
+            'image_path'=> $this->image_path,
         ];
     }
 }

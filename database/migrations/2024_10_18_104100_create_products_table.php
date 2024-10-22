@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('stock');
             $table->string('minOrder');
             $table->string('category');
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

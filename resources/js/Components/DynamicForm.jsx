@@ -15,9 +15,11 @@ const DynamicForm = ({ fields, submitUrl, initialData = {}, cancelLink }) => {
         const { name, value, files } = e.target;
 
         if (e.target.type === 'file') {
-            setFormData({ ...formData, [name]: files }); // Menyimpan file ke formData
+            // Batasi jumlah file yang diunggah maksimal 3
+            const selectedFiles = files.length > 3 ? Array.from(files).slice(0, 3) : files;
+            setFormData({ ...formData, [name]: selectedFiles });
         } else {
-            setFormData({ ...formData, [name]: value }); // Menyimpan value ke formData
+            setFormData({ ...formData, [name]: value });
         }
     };
 

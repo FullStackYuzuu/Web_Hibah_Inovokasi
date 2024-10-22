@@ -12,11 +12,21 @@ const AdminProducts = () => {
         { name: 'Harga', selector: row => `Rp. ${(row.price || 0).toLocaleString()}`, sortable: true },
         { name: 'Diskon', selector: row => `${(row.discount || 0).toLocaleString()} %`, sortable: true },
         { name: 'Harga Akhir', selector: row => `Rp. ${(row.price - (row.discount * 0.01) * row.price).toLocaleString()}`, sortable: true },
-        { name: 'Deskripsi', selector: row => row.description, sortable: false },
+        { name: 'Stok', selector: row => row.stock, sortable: false },
         { name: 'Kegunaan', selector: row => row.usage, sortable: false },
         {
             name: 'Foto',
-            cell: row => <img src={row.images[0]} alt={row.nama} className="w-12 h-12 object-cover rounded-md" />,
+            cell: row => (
+                row.image_path ? (
+                    <img
+                        src={`/storage/${row.image_path}`} // URL gambar dari public storage
+                        alt={row.name}
+                        className="w-12 h-12 object-cover rounded-md"
+                    />
+                ) : (
+                    <span>Tidak ada foto</span>
+                )
+            ),
             ignoreRowClick: true,
         },
     ];

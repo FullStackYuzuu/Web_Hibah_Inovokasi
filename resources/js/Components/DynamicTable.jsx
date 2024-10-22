@@ -8,10 +8,6 @@ const DynamicTable = ({ data, addNewLink, editLink, columns, table }) => {
     const [searchText, setSearchText] = useState('');
     const { url } = usePage();
 
-    if (!data || data.length === 0) {
-        return <p className="text-center">No data available.</p>;
-    }
-
     const handleDelete = (table, id) => {
         if (window.confirm("Apakah Anda yakin ingin menghapus item ini?")) {
             Inertia.delete(`/delete-item/${table}/${id}`, {
@@ -19,12 +15,12 @@ const DynamicTable = ({ data, addNewLink, editLink, columns, table }) => {
                 preserveState: false,
                 onSuccess: (page) => {
                     if (page.props.flash?.success) {
-                        alert(page.props.flash.success); // Tampilkan flash message sukses
+                        alert(page.props.flash.success); // Display flash success message
                     }
                 },
                 onError: (errors) => {
                     console.log(errors);
-                    alert('Gagal menghapus item');
+                    alert('Failed to delete item');
                 }
             });
         }
@@ -34,17 +30,26 @@ const DynamicTable = ({ data, addNewLink, editLink, columns, table }) => {
         name: 'Aksi',
         cell: row => (
             <div className="flex space-x-2">
-                <Link href={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link> {/* Mengarahkan ke halaman edit */}
-                <button onClick={() => handleDelete(table, row.id)} className="text-red-500 hover:underline">Hapus</button>
+                <Link href={`${editLink}/${row.id}`} className="text-blue-500 hover:underline">Edit</Link>
+                <button onClick={() => handleDelete(table, row.id)} className="text-red-500 hover:underline">Delete</button>
             </div>
         ),
     };
 
-
+    // Custom filtering logic to include nested properties such as product.name
     const filteredData = data.filter(item =>
         Object.values(item).some(val =>
-            String(val).toLowerCase().includes(searchText.toLowerCase())
+        (typeof val === 'object' && val !== null
+            ? Object.values(val).some(nestedVal =>
+                String(nestedVal).toLowerCase().includes(searchText.toLowerCase())
+            )
+            : String(val).toLowerCase().includes(searchText.toLowerCase())
         )
+        )
+    );
+
+    const NoDataComponent = () => (
+        <div className="text-center py-4">No data available.</div>
     );
 
     return (
@@ -67,11 +72,12 @@ const DynamicTable = ({ data, addNewLink, editLink, columns, table }) => {
             </div>
 
             <DataTable
-                columns={[...columns, actionColumn]} // Merge dynamic columns with the action column
+                columns={[...columns, actionColumn]}
                 data={filteredData}
                 pagination
                 highlightOnHover
                 className="overflow-x-auto"
+                noDataComponent={<NoDataComponent />}
             />
         </div>
     );

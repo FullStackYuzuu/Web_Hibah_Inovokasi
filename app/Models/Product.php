@@ -20,12 +20,6 @@ class Product extends Model
         'stock',
         'minOrder',
         'category',
+        'image_path',
     ];
-
-    // Relasi dengan ProductImage (satu produk bisa memiliki banyak gambar)
-    public function images()
-    {
-        return $this->hasMany(ProductImage::class);
-    }
 }
-

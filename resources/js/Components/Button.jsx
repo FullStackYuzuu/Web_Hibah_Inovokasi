@@ -23,9 +23,10 @@ const Button = ({ text, className, to, imageSrc, imageAlt, onClick }) => {
     // Jika `to` disediakan, gunakan <Link> untuk navigasi
     if (to) {
         return (
-            <Link href={to} className={combinedClass}>
+            <a href={to} className={combinedClass}>
                 {buttonContent}
-            </Link>
+            </a>
+
 
 
         );

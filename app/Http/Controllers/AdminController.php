@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
@@ -11,11 +12,14 @@ use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use App\Models\Sales;
 use App\Http\Resources\SalesResource;
+use App\Models\ProductImage;
+use App\Models\Settings;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use DB;
 
 class AdminController extends Controller
 {
-
     public function login(Request $request)
     {
         $gUser = Socialite::driver('google')->user();
@@ -33,7 +37,6 @@ class AdminController extends Controller
         }
     }
 
-
     public function logout(Request $request)
     {
         auth('web')->logout();
@@ -45,38 +48,52 @@ class AdminController extends Controller
 
     public function index()
     {
-        // Contoh data statistik yang dapat dihitung dari database
-        $totalPenjualanBulanIni = 682500; // total dalam rupiah
-        $produkTerjualPalingBanyak = 'Produk A'; // nama produk
-        $totalPenjualanSepanjangMasa = 5405000; // total dalam rupiah
+        // Menghitung total penjualan bulan ini
+        $totalPenjualanBulanIni = Sales::whereMonth('sale_time', Carbon::now()->month)
+            ->sum('total_price');
 
+        // Mengambil produk yang paling banyak terjual bulan ini
+        $produkTerjualPalingBanyak = Sales::with('product')
+            ->select('product_id', Sales::raw('SUM(amount) as total_amount'))
+            ->whereMonth('sale_time', Carbon::now()->month)
+            ->groupBy('product_id')
+            ->orderByDesc('total_amount')
+            ->first();
+
+        $produkTerjualPalingBanyakNama = $produkTerjualPalingBanyak ? $produkTerjualPalingBanyak->product->name : 'Tidak ada penjualan';
+
+        // Menghitung total penjualan sepanjang masa
+        $totalPenjualanSepanjangMasa = Sales::sum('total_price');
+
+        // Data statistik yang akan dikirim ke frontend
         $statsData = [
             ['title' => 'Total Penjualan Bulan Ini', 'value' => 'Rp ' . number_format($totalPenjualanBulanIni, 0, ',', '.')],
-            ['title' => 'Produk Terjual Paling Banyak Bulan Ini', 'value' => $produkTerjualPalingBanyak],
+            ['title' => 'Produk Terjual Paling Banyak Bulan Ini', 'value' => $produkTerjualPalingBanyakNama],
             ['title' => 'Total Penjualan Sepanjang Masa', 'value' => 'Rp ' . number_format($totalPenjualanSepanjangMasa, 0, ',', '.')],
         ];
 
-        // Data penjualan bulanan (contoh saja)
-        $salesData = [
-            ['month' => 'Jan', 'sales' => 4000000],
-            ['month' => 'Feb', 'sales' => 3000000],
-            ['month' => 'Mar', 'sales' => 2000000],
-            ['month' => 'Apr', 'sales' => 2780000],
-            ['month' => 'May', 'sales' => 1890000],
-            ['month' => 'Jun', 'sales' => 2390000],
-            ['month' => 'Jul', 'sales' => 3490000],
-        ];
+        // Ambil data penjualan bulanan, sum total per bulan
+        $salesData = Sales::selectRaw('MONTH(sale_time) as month, SUM(total_price) as sales')
+            ->groupBy('month')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'month' => Carbon::create()->month($item->month)->shortMonthName, // Mengambil nama bulan
+                    'sales' => $item->sales
+                ];
+            });
 
+
+        // Mengirim data ke view
         return Inertia::render('AdminHome', [
             'statsData' => $statsData,
             'salesData' => $salesData,
         ]);
     }
 
-
     public function product()
     {
-        $products = Product::with('images')->orderBy('updated_at', 'desc')->get(); // Pastikan $products adalah koleksi
+        $products = Product::orderBy('updated_at', 'desc')->get(); // Pastikan $products adalah koleksi
         return Inertia::render('AdminProducts', [
             'products' => ProductResource::collection($products)->toArray(request()), // Pastikan diubah ke array
         ]);
@@ -91,7 +108,7 @@ class AdminController extends Controller
     public function editProduct($id)
     {
         // Cari produk berdasarkan ID beserta gambar terkaitnya
-        $product = Product::with('images')->findOrFail($id);
+        $product = Product::findOrFail($id);
 
         // Kirim produk ke halaman frontend melalui Inertia
         return Inertia::render('AddEditProduct', [
@@ -114,10 +131,10 @@ class AdminController extends Controller
             'minOrder' => 'nullable|integer',
             'description' => 'required|string',
             'usage' => 'nullable|string',
-            'images.*' => 'nullable|image|max:2048', // Validasi untuk file gambar
+            'images' => 'nullable|image|max:2048', // Validasi untuk satu file gambar
         ]);
 
-        // Jika ID produk ada, lakukan update, jika tidak ada ID, buat produk baru
+        // Simpan atau perbarui produk terlebih dahulu
         $product = Product::updateOrCreate(
             ['id' => $request->id], // Cari produk berdasarkan ID jika ada
             $request->except('images') // Simpan semua data kecuali images
@@ -125,10 +142,17 @@ class AdminController extends Controller
 
         // Jika ada file gambar yang diunggah
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public'); // Simpan gambar di storage
-                $product->images()->create(['image_path' => $path]); // Simpan path gambar ke database
+            // Hapus gambar lama jika ada
+            if ($product->image_path) {
+                Storage::disk('public')->delete($product->image_path); // Hapus gambar lama dari storage
             }
+
+            // Simpan file gambar baru dan dapatkan pathnya
+            $imagePath = $request->file('images')->store('productImage/' . Str::random(), 'public');
+
+            // Simpan path gambar baru ke dalam field image_path produk yang sama
+            $product->image_path = $imagePath;
+            $product->save(); // Simpan perubahan ke database
         }
 
         // Set flash message
@@ -138,7 +162,7 @@ class AdminController extends Controller
     public function sales()
     {
         // Mengambil data penjualan beserta produk terkait
-        $sales = Sales::with('product')->orderBy('sale_time', 'desc')->get();
+        $sales = Sales::with('product')->orderBy('updated_at', 'desc')->get();
 
         // Menggunakan SalesResource untuk mengubah data menjadi array
         return Inertia::render('AdminSales', [
@@ -220,10 +244,6 @@ class AdminController extends Controller
         return response()->json(['success' => 'Penjualan berhasil disimpan.']);
     }
 
-
-
-
-
     public function account()
     {
         // Fetch all accounts (or users) ordered by the latest update
@@ -285,5 +305,28 @@ class AdminController extends Controller
             // Redirect dengan flash error
             return redirect()->back();
         }
+    }
+    public function Settings()
+    {
+        // Ambil semua data dari tabel settings
+        $settings = Settings::all();
+
+        // Kirim data settings ke komponen Inertia 'AdminSettings'
+        return Inertia::render('AdminSettings', [
+            'settings' => $settings,
+        ]);
+    }
+
+
+    public function updateSet(Request $request, $id)
+    {
+        $setting = Settings::findOrFail($id);
+        $request->validate([
+            'value' => 'nullable|string|max:255', // Nullable if you want to allow empty
+        ]);
+
+        $setting->update(['value' => $request->value]);
+
+        return redirect()->back()->with('success', 'Setting berhasil diperbarui');
     }
 }

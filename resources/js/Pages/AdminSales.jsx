@@ -7,9 +7,10 @@ const AdminSales = () => {
     const { sales: serverSales = [], flash } = usePage().props;
 
     const columns = [
-        { name: 'Jumlah', selector: row => row.amount, sortable: true },
+        { name: 'ID', selector: row => row.id, sortable: true },
         { name: 'Produk', selector: row => row.product?.name || 'Produk tidak tersedia', sortable: true }, // Mengakses nama produk
-        { name: 'Total Harga', selector: row => `Rp. ${row.total_price.toLocaleString()}`, sortable: true },
+        { name: 'Jumlah', selector: row => row.amount, sortable: true },
+        { name: 'Total Akhir', selector: row => `Rp. ${(row.total_price).toLocaleString()}`, sortable: true },
         { name: 'Waktu Penjualan', selector: row => new Date(row.sale_time).toLocaleString(), sortable: true }, // Format tanggal
     ];
 

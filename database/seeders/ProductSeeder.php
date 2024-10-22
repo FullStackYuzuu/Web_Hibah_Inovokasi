@@ -17,10 +17,6 @@ class ProductSeeder extends Seeder
     {
         // Membuat 10 produk dengan data palsu
         \App\Models\Product::factory(20)->create()->each(function ($product) {
-            // Setiap produk akan memiliki 3 gambar terkait
-            \App\Models\ProductImage::factory(3)->create([
-                'product_id' => $product->id,
-            ]);
         });
     }
 }

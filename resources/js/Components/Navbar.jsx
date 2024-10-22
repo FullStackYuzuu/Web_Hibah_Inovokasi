@@ -12,11 +12,13 @@ const Navbar = () => {
         <nav className="w-full bg-white text-orange-500 p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center">
-                    <img
-                        src="/LogoUtama.png"
-                        alt="Laksamana Tapioka"
-                        className="w-[8rem] sm:w-[10rem] 3xl:w-[12rem] 4xl:w-[14rem] mr-2"
-                    />
+                    <a href='/'>
+                        <img
+                            src="/LogoUtama.png"
+                            alt="Laksamana Tapioka"
+                            className="w-[8rem] sm:w-[10rem] 3xl:w-[12rem] 4xl:w-[14rem] mr-2"
+                        />
+                    </a>
                 </div>
 
                 {/* Tombol toggle untuk mobile */}

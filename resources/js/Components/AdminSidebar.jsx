@@ -60,6 +60,18 @@ const AdminSidebar = () => {
               Accounts
             </Link>
           </li>
+          <li>
+            <Link
+              href="/admin/settings"
+              className={`block transition-transform duration-300 hover:scale-105 px-4 py-2 ${
+                isActive('/admin/settings')
+                  ? 'bg-white text-orange-500 rounded-lg'
+                  : 'text-white'
+              }`}
+            >
+              Settings
+            </Link>
+          </li>
         </ul>
       </div>
 
